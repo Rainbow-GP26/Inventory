@@ -24,5 +24,8 @@ struct FItemRow: public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AActor> ActorClass;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<AActor> PreviewActor;
+	
 	
 };

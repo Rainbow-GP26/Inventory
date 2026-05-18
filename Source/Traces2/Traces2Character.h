@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Backpack.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Traces2Character.generated.h"
@@ -39,6 +40,9 @@ class ATraces2Character : public ACharacter
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* InventoryAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UBackpack* Backpack;
 	
 public:
 	ATraces2Character();

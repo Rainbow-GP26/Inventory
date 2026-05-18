@@ -35,6 +35,9 @@ ATraces2Character::ATraces2Character()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+	
+	Backpack = CreateDefaultSubobject<UBackpack>(TEXT("Backpack"));
+	Backpack->SetupAttachment(GetCapsuleComponent());
 
 }
 
@@ -98,5 +101,5 @@ void ATraces2Character::Look(const FInputActionValue& Value)
 
 void ATraces2Character::Inventory(const FInputActionValue& Value)
 {
-	
+	Backpack->ToggleInventory();
 }

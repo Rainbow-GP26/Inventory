@@ -32,3 +32,29 @@ void UBackpack::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	// ...
 }
 
+void UBackpack::ToggleInventory()
+{
+	if (Open)
+	{
+		SetRelativeLocation(CloseLocation);
+	}
+	else
+	{
+		SetRelativeLocation(OpenLocation);
+	}
+	
+	Open = !Open;
+}
+
+void UBackpack::AddItemToNextFreeSlot(FString ItemID)
+{
+	for (auto ItemSlot : Slot)
+	{
+		if (ItemSlot.inUse == false)
+		{
+			ItemSlot.inUse = true;	
+			ItemSlot.ItemID = ItemID;
+		}
+	}
+}
+
