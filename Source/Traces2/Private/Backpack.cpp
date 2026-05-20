@@ -25,13 +25,12 @@ void UBackpack::BeginPlay()
 	
 }
 
-
 // Called every frame
 void UBackpack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	
+	
 }
 
 void UBackpack::ToggleInventory()
@@ -50,7 +49,7 @@ void UBackpack::ToggleInventory()
 
 void UBackpack::AddItemToNextFreeSlot(FString ItemID)
 {
-	for (auto ItemSlot : Slot)
+	for (auto &ItemSlot : Slot)
 	{
 		if (ItemSlot.inUse == false)
 		{
@@ -70,7 +69,10 @@ void UBackpack::AddItemToNextFreeSlot(FString ItemID)
 			 AActor* PreviewActor = GetWorld()->SpawnActor<AActor>(ItemRow.PreviewActor, SpawnLocation, Rotation, SpawnParams);
 			 PreviewActor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
 			
-			break;
+			PreviewActor->SetActorRelativeLocation(ItemSlot.Offset);
+			ItemSlot.PreviewActor = PreviewActor;
+			
+			return;
 		}
 	}
 }

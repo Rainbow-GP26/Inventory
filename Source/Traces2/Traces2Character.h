@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Backpack.h"
+#include "DraggableActor.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Traces2Character.generated.h"
@@ -33,6 +34,9 @@ class ATraces2Character : public ACharacter
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* JumpAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* PrimaryMouseAction;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
@@ -55,6 +59,13 @@ public:
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
+	
+	UPROPERTY(VisibleAnywhere)
+	ADraggableActor* ActiveDraggableActor;
+	
+	UPROPERTY(VisibleAnywhere)
+	bool bIsDragging;
+	
 
 protected:
 	/** Called for movement input */
@@ -64,8 +75,15 @@ protected:
 	void Look(const FInputActionValue& Value);
 	
 	void Inventory(const FInputActionValue& Value);
+	
+	void Tick(float DeltaSeconds) override;
 
-protected:
+	void MouseDown(const FInputActionValue& Value);
+	
+	void MouseUp(const FInputActionValue& Value);
+	
+	
+	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface

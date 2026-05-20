@@ -65,6 +65,10 @@ void ATraces2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATraces2Character::Look);
 		
 		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Triggered, this, &ATraces2Character::Inventory);
+		
+		EnhancedInputComponent->BindAction(PrimaryMouseAction, ETriggerEvent::Started, this, &ATraces2Character::MouseDown);
+		EnhancedInputComponent->BindAction(PrimaryMouseAction, ETriggerEvent::Canceled, this, &ATraces2Character::MouseUp);
+		
 	}
 	else
 	{
@@ -90,6 +94,13 @@ void ATraces2Character::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
+	
+	if (bIsDragging)
+	{
+		ActiveDraggableActor->AddActorLocalOffset(FVector(0, LookAxisVector.X,-LookAxisVector.Y));
+	}
+		
+	if (Backpack->Open) return;
 
 	if (Controller != nullptr)
 	{
@@ -102,4 +113,47 @@ void ATraces2Character::Look(const FInputActionValue& Value)
 void ATraces2Character::Inventory(const FInputActionValue& Value)
 {
 	Backpack->ToggleInventory();
+	
+	
+		APlayerController* PlayerController = Cast<APlayerController>(GetOwner());
+	
+		if (PlayerController != nullptr)
+		{
+			PlayerController->bShowMouseCursor = Backpack->Open;
+		}
+}
+
+void ATraces2Character::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+	APlayerController* PlayerController = Cast<APlayerController>(GetOwner());
+	
+	if (!bIsDragging && PlayerController)
+	{
+		FHitResult Hit;
+		
+		bool hit = PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+		
+		if (hit)
+		{
+			ActiveDraggableActor = Cast<ADraggableActor>( Hit.GetActor());
+		}
+	}
+	
+	
+}
+
+void ATraces2Character::MouseDown(const FInputActionValue& Value)
+{
+	if (ActiveDraggableActor != nullptr)
+	{
+		bIsDragging = true;
+	}
+		
+}
+
+void ATraces2Character::MouseUp(const FInputActionValue& Value)
+{
+	bIsDragging = false;
 }
