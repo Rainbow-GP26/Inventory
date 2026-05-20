@@ -2,6 +2,8 @@
 
 
 #include "Backpack.h"
+#include "Traces2/FItemRow.h"
+#include "Traces2/InventoryGameInstance.h"
 
 // Sets default values for this component's properties
 UBackpack::UBackpack()
@@ -54,6 +56,21 @@ void UBackpack::AddItemToNextFreeSlot(FString ItemID)
 		{
 			ItemSlot.inUse = true;	
 			ItemSlot.ItemID = ItemID;
+
+			UInventoryGameInstance* InventoryGameInstance = Cast<UInventoryGameInstance>(GetWorld()->GetGameInstance());
+			
+			FItemRow ItemRow = InventoryGameInstance->GetItemByID(ItemID);
+			
+			 FVector SpawnLocation = GetComponentLocation() + ItemSlot.Offset;
+			 FRotator Rotation = GetComponentRotation();
+			
+			 FActorSpawnParameters SpawnParams;
+			 SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			
+			 AActor* PreviewActor = GetWorld()->SpawnActor<AActor>(ItemRow.PreviewActor, SpawnLocation, Rotation, SpawnParams);
+			 PreviewActor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
+			
+			break;
 		}
 	}
 }
